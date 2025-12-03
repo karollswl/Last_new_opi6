@@ -30,26 +30,105 @@ int user_count = 0;
 Trip trips[100];
 int trip_count = 0;
 
+//баг5 - перевірка спецсимфолів у логіні
+//бог 4 - обмеження довжини логіну
+bool IsLoginValid(const string& login) {
+    if (login.length() < 3 || login.length() > 20)
+        return false;
+    for (char c : login) {
+        if (!isalnum(c) && c != '_' && c != '-')
+            return false;
+    }
+    return true;
+}
+
+//баг 2 - слабкий пароль
+bool IsPasswordStrong(const string& pass) {
+    if (pass.length() < 6) return false;
+    bool hasLetter = false, hasDigit = false;
+    for (char c : pass) {
+        if (isalpha(c)) hasLetter = true;
+        if (isdigit(c)) hasDigit = true;
+    }
+    return hasLetter && hasDigit;
+}
+
+//баг 1 - перевірка логіну на унікальність
+bool IsLoginUnique(const string& login) {
+    for (int i = 0; i < user_count; i++) {
+        if (users[i].login == login)
+            return false;
+    }
+    return true;
+}
+
 void RegisterUser() {
     cout << "\n===== РЕЄСТРАЦІЯ НОВОГО КОРИСТУВАЧА =====\n";
+    string login, password;
 
-    cout << "Введіть логін: ";
-    cin >> users[user_count].login;
+    while (true) {
+        cout << "Введіть логін (3–20 символів, лише літери/цифри/_/-): ";
+        cin >> login;
 
-    cout << "Введіть пароль: ";
-    cin >> users[user_count].password;
+        if (!IsLoginValid(login)) {
+            cout << "Недопустимий логін!\n";
+            continue;
+        }
 
-    cout << "Користувач зареєстрований!\n";
+        if (!IsLoginUnique(login)) {
+            cout << "Такий логін вже існує!\n";
+            continue;
+        }
 
+        break;
+    }
+
+    while (true) {
+        cout << "Введіть пароль (мін. 6 символів, букви + цифри): ";
+        cin >> password;
+
+        if (password == login) { // баг 3
+            cout << "Пароль не може збігатися з логіном!\n";
+            continue;
+        }
+
+        if (!IsPasswordStrong(password)) {
+            cout << "Пароль занадто слабкий!\n";
+            continue;
+        }
+
+        break;
+    }
+
+    users[user_count].login = login;
+    users[user_count].password = password;
     user_count++;
+
+    cout << "Користувача зареєстровано!\n";
 }
 
 bool LoginUser() {
     string login, password;
 
     cout << "\n===== ВХІД ДО СИСТЕМИ =====\n";
-    cout << "Логін: ";
-    cin >> login;
+
+    while (true) {
+        cout << "Логін: ";
+        cin >> login;
+
+        if (login.length() > 20) {
+            cout << "Логін занадто довгий! (макс. 20 символів)\n";
+            continue;
+        }
+
+        if (!IsLoginValid(login)) {
+            cout << "Логін містить недопустимі символи!\n";
+            continue;
+        }
+
+        break;
+    }
+
     cout << "Пароль: ";
     cin >> password;
 
