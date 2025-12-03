@@ -80,20 +80,18 @@ void SelectTariff(Trip& t) {
     cout << "2 - Стандарт (15 грн/км)\n";
     cout << "3 - Бізнес  (20 грн/км)\n";
 
-    cout << "Ваш вибір: ";
-    cin >> t.tariff;
+    while (true) {
+        cout << "Ваш вибір: ";
+        cin >> t.tariff;
 
-    if (cin.fail()) {
-        cout << "Помилка!\n";
-        exit(1);
-    }
+        if (!cin.fail() && t.tariff >= 1 && t.tariff <= 3)
+            break;
 
-    if (t.tariff < 1 || t.tariff > 3) {
-        cout << "Помилка!\n";
-        exit(1);
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "Помилка вводу!\n";
     }
 }
-
 void SelectAtmosphere(Trip& t) {
     int choice;
 
@@ -129,17 +127,16 @@ void SelectAtmosphere(Trip& t) {
 }
 
 void SelectTemperature(Trip& t) {
-    cout << "\nТемпература (16–30°C): ";
-    cin >> t.temperature;
+    while (true) {
+        cout << "\nТемпература (16–30°C): ";
+        cin >> t.temperature;
 
-    if (cin.fail()) {
-        cout << "Помилка!\n";
-        exit(1);
-    }
+        if (!cin.fail() && t.temperature >= 16 && t.temperature <= 30)
+            break;
 
-    if (t.temperature < 16 || t.temperature > 30) {
-        cout << "Помилка!\n";
-        exit(1);
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "Некоректно!\n";
     }
 }
 
