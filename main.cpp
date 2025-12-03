@@ -191,22 +191,43 @@ void Payment(Trip& t) {
 }
 
 void Rating(Trip& t) {
-    while (true) {
-        cout << "\nОцініть поїздку (1–5): ";
-        cin >> t.rating;
+    int choice;
 
-        if (!cin.fail() && t.rating >= 1 && t.rating <= 5)
-            break;
+    cout << "\nБажаєте оцінити поїздку?\n";
+    cout << "1 - Так\n";
+    cout << "2 - Ні\n";
+    cout << "Ваш вибір: ";
+    cin >> choice;
 
-        cin.clear();
-        cin.ignore(10000, '\n');
-        cout << "Помилка! Введіть число від 1 до 5.\n";
+    if (choice == 1) {
+        while (true) {
+            cout << "\nОцініть поїздку (1–5): ";
+            cin >> t.rating;
+
+            if (!cin.fail() && t.rating >= 1 && t.rating <= 5)
+                break;
+
+            cin.clear();
+            cin.ignore(10000, '\n');
+            cout << "Помилка! Введіть число від 1 до 5.\n";
+        }
+    }
+    else {
+        t.rating = 0;
+        cout << "Оцінювання пропущено.\n";
     }
 }
 
 void AddBonus(Trip& t) {
-    t.bonusPoints = 10;
-    cout << "\nВи отримали " << t.bonusPoints << " бонусних балів!\n";
+    static int totalBonus = 0;
+
+    int earnedBonus = 10;
+    t.bonusPoints = earnedBonus;
+
+    totalBonus += earnedBonus;
+
+    cout << "\nВи отримали " << earnedBonus << " бонусних балів!\n";
+    cout << "Загальна кількість бонусів: " << totalBonus << "\n";
 }
 
 void AfterAuthFlow() {
